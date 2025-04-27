@@ -1,4 +1,4 @@
-from main_sol import *
+from main import *
 
 def test_shortest_shortest_path():
 
@@ -32,3 +32,7 @@ def test_get_path():
     graph = get_sample_graph()
     parents = bfs_path(graph, 's')
     assert get_path(parents, 'd') == 'sbc'
+    print(parents)
+    print(get_path(parents, 'd'))
+
+test_get_path()

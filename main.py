@@ -13,8 +13,35 @@ def shortest_shortest_path(graph, source):
       (shortest path weight, shortest path number of edges). See test case for example.
     """
     ### TODO
-    pass
+    vertices = set(graph.keys())
+    for neighbors in graph.values():
+        for v, _ in neighbors:
+            vertices.add(v)
     
+    # Priority queue: (total_weight, num_edges, vertex)
+    heap = []
+    heappush(heap, (0, 0, source))
+    
+    # Initialize distances for all vertices
+    distances = {v: (float('inf'), float('inf')) for v in vertices}
+    distances[source] = (0, 0)
+    
+    while heap:
+        total_weight, num_edges, u = heappop(heap)
+        
+        if u not in graph:
+            continue  # If no outgoing edges from u
+        
+        for v, weight in graph[u]:
+            new_weight = total_weight + weight
+            new_edges = num_edges + 1
+            
+            # Relaxation step: prefer smaller weight, or same weight with fewer edges
+            if (new_weight < distances[v][0]) or (new_weight == distances[v][0] and new_edges < distances[v][1]):
+                distances[v] = (new_weight, new_edges)
+                heappush(heap, (new_weight, new_edges, v))
+    
+    return distances
 
     
     
@@ -25,6 +52,21 @@ def bfs_path(graph, source):
       that vertex in the shortest path tree.
     """
     ###TODO
+    parent = {}
+    visited = set()
+    queue = deque()
+
+    visited.add(source)
+    queue.append(source)
+
+    while queue:
+        u = queue.popleft()
+        for v in graph.get(u, []):
+            if v not in visited:
+                visited.add(v)
+                parent[v] = u
+                queue.append(v)
+    return parent
     pass
 
 def get_sample_graph():
@@ -44,5 +86,13 @@ def get_path(parents, destination):
       (excluding the destination node itself). See test_get_path for an example.
     """
     ###TODO
-    pass
+    path = []
+    current = destination
 
+    while current in parents:
+        current =  parents[current]
+        path.append(current)
+
+    path.reverse()
+    return ''.join(path)
+    pass
